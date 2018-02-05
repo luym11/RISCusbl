@@ -6,10 +6,17 @@ from std_msgs.msg import String
 ser = serial.Serial('/dev/ttyUSB0', 19200)
 
 def usbl_pub():
-    pub = rospy.Publisher('chatter', String, queue_size=50)
+    # publishers
+    pub1 = rospy.Publisher('relative_x', String, queue_size=10)
+    pub2 = rospy.Publisher('relative_y', String, queue_size=10)
+    pub3 = rospy.Publisher('relative_z', String, queue_size=10)
+    pub4 = rospy.Publisher('usbl_time', String, queue_size=10)
+
     rospy.init_node('usbl_pub', anonymous=True)
     rate = rospy.Rate(10) # 10Hz
+
     rospy.loginfo("node usbl_pub set")
+    
     while not rospy.is_shutdown():
         rospy.loginfo("in while")
         line = ser.readline()
@@ -19,8 +26,11 @@ def usbl_pub():
             hello_str = "hello world %s" % rospy.get_time()
             data_str = "data are: %s, %s, %s, %s" % (data_list[2], data_list[3], data_list[4], data_list[7])
             rospy.loginfo(data_str)
-            rospy.loginfo(hello_str)
-            pub.publish(data_str)
+            #rospy.loginfo(hello_str)
+            pub1.publish(data_list[2])
+            pub2.publish(data_list[3])
+            pub3.publish(data_list[4])
+            pub4.publish(data_list[7])
             rate.sleep()
 
 if __name__ == '__main__':
